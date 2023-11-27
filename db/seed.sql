@@ -13,7 +13,7 @@ VALUES
     (5, "Accounting Manager", 80000.00, 2),
     (6, "HR Assistant", 50000, 1);
 
-INSERT INTO employees (employee_id, first_name, last_name, title, manager_id)
+INSERT INTO employees (employee_id, first_name, last_name, role_id, manager_id)
 VALUES 
     (2, "Cody", "Moser", 3, NULL),
     (3, "Victor", "Buelna", 5, NULL),
