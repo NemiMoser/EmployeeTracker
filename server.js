@@ -35,7 +35,7 @@ function viewRoles() {
 }
 
 function viewEmployees() {
-    connection.query('SELECT e.employee_id, e.first_name, e.last_name, r.title, d.department_name AS department, r.salary, e2.first_name AS manager FROM employees e LEFT JOIN employees e2 ON e.manager_id = e2.employee_id JOIN roles r ON e.title = r.role_id JOIN departments d ON r.department_id = d.department_id', (err, res) => {
+    connection.query('SELECT e.employee_id, e.first_name, e.last_name, r.title, d.department_name AS department, r.salary, e2.first_name AS manager FROM employees e LEFT JOIN employees e2 ON e.manager_id = e2.employee_id JOIN roles r ON e.role_id = r.role_id JOIN departments d ON r.department_id = d.department_id', (err, res) => {
         if (err) throw err;
         console.log('\nEmployees:');
         console.table(res);
@@ -48,26 +48,27 @@ function viewEmployeesByDepartment() {
         if (err) throw err;
 
         inquirer
-        .prompt([
-            {
-                type: 'list',
-                name: 'selectedDepartment',
-                message: 'Select a department to view employees:',
-                choices: departments.map((department) => department.department_name),
-            },
-        ])
-        .then((departmentAnswer) => {
-            const selectedDepartment = departmentAnswer.selectedDepartment;
+            .prompt([
+                {
+                    type: 'list',
+                    name: 'selectedDepartment',
+                    message: 'Select a department to view employees:',
+                    choices: departments.map((department) => department.department_name),
+                },
+            ])
+            .then((departmentAnswer) => {
+                const selectedDepartment = departmentAnswer.selectedDepartment;
 
-            connection.query('SELECT e.first_name, e.last_name, r.title, d.department_name AS department FROM employees e JOIN roles r ON e.title = r.role_id JOIN departments d ON r.department_id = d.department_id WHERE d.department_name = ?', selectedDepartment, (err, res) => {
-                if (err) throw err;
-                console.log(`\nEmployees in the ${selectedDepartment} department:`);
-                console.table(res);
-                displayMenu();
+                connection.query('SELECT e.first_name, e.last_name, r.title AS role, d.department_name AS department FROM employees e JOIN roles r ON e.role_id = r.role_id JOIN departments d ON r.department_id = d.department_id WHERE d.department_name = ?', selectedDepartment, (err, res) => {
+                    if (err) throw err;
+                    console.log(`\nEmployees in the ${selectedDepartment} department:`);
+                    console.table(res);
+                    displayMenu();
+                });
             });
-        });
-});
+    });
 }
+
 
 
 //Adding department, role, employees
@@ -138,6 +139,11 @@ function addEmployee() {
     .prompt([
         {
             type: 'input',
+            name: 'employee_id',
+            message: 'Enter the ID for this employee:',
+        },
+        {
+            type: 'input',
             name: 'first_name',
             message: 'Enter the first name of the employee:',
         },
@@ -156,17 +162,12 @@ function addEmployee() {
             name: 'manager_id',
             message: 'Enter the manager ID for this employee:',
         },
-        {
-            type: 'input',
-            name: 'employee_id',
-            message: 'Enter the ID for this employee:',
-        },
     ])
     .then((answers) => {
-        const { first_name, last_name, role_id, manager_id, employee_id } = answers;
-        const query = 'INSERT INTO employees (first_name, last_name, role_id, manager_id, employee_id) VALUES (?, ?, ?, ?, ?)';
+        const { employee_id, first_name, last_name, role_id, manager_id } = answers;
+        const query = 'INSERT INTO employees (employee_id, first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?, ?)';
 
-        connection.query(query, [first_name, last_name, role_id, manager_id, employee_id], (err, res) => {
+        connection.query(query, [employee_id, first_name, last_name, role_id, manager_id], (err, res) => {
             if (err) throw err;
             console.log('Employee added successfully!');
             displayMenu();
@@ -177,8 +178,7 @@ function addEmployee() {
 
 //Update an employee role
 function getEmployeesWithRoles(callback) {
-    connection.query('SELECT employees.employee_id, employees.first_name, employees.last_name, employees.title, roles.title FROM employees INNER JOIN roles ON employees.title = roles.role_id'
-    , (err, res) => {
+    connection.query('SELECT e.employee_id, e.first_name, e.last_name, r.role_id, r.title FROM employees e INNER JOIN roles r ON e.role_id = r.role_id', (err, res) => {
         if (err) throw err;
         callback(res);
     });
