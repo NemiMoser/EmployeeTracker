@@ -23,14 +23,13 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE employees (
-    employee_id INT PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    title INT NOT NULL,
+    employee_id INT PRIMARY KEY,
     department_id INT NOT NULL DEFAULT 1,
-    FOREIGN KEY (title) REFERENCES roles(role_id),
+    role_id INT NOT NULL,
     FOREIGN KEY (department_id) REFERENCES departments(department_id),
+    FOREIGN KEY (role_id) REFERENCES roles(role_id),
     salary DECIMAL(10, 2) NOT NULL DEFAULT 1,
-    manager_id INT,
-    FOREIGN KEY (manager_id) REFERENCES employees(employee_id)
+    manager_id INT
 );
