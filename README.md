@@ -15,13 +15,13 @@ This is an application created to showcase the use of Node JS and MySql to view 
 - [Questions](#questions)
 
 ## Video Demonstration
-https://drive.google.com/ 
+[https://drive.google.com/](https://drive.google.com/file/d/1Jwm-up4tqfim_YoEnI-EWpseTO73b3y3/preview) 
 
 ## Installation Instructions
 In order to deploy the application, go to the terminal and enter “node npm install”. Once that has been installed, enter "npm start" and a menu will be displayed.
 
 ## Usage Information
-To use the application, you will need to select one of the options to either view tables, to make changes to an existing table, or to add new information to an existing table. You will answer the questions in the terminal and choose options when prompted.
+To use the application, you will need to select one of the options to either view tables, make changes to an existing table, or add new information to an existing table. You will answer the questions in the terminal and choose options when prompted.
 
 ## Contribution Guidelines
 This project illustrates the use of HTML, JavaScript, Node JS, npm, and MySQL. DBeaver was used to view the tables.
